@@ -1,0 +1,22 @@
+# Core
+python-dotenv
+requests
+pandas
+beautifulsoup4
+fastapi
+uvicorn
+yfinance
+google-generativeai
+
+# NLP / LLMs
+langchain
+sentence-transformers
+chromadb
+transformers
+torch
+
+# UI (for later)
+streamlit
+
+# Optional enhancements
+tqdm

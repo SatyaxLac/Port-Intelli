@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --desk-bg: #070806;
+    --desk-panel: #10120e;
+    --desk-panel-strong: #171910;
+    --desk-line: #2d3026;
+    --desk-text: #f6f2e8;
+    --desk-muted: #969b8a;
+    --desk-amber: #f6c453;
+    --desk-cyan: #67e8f9;
+    --desk-emerald: #74f2a7;
+    --desk-rose: #fb7185;
+
+    --background: 80 13% 3%;
+    --foreground: 43 47% 94%;
+    --card: 80 12% 7%;
+    --card-foreground: 43 47% 94%;
+    --popover: 80 12% 7%;
+    --popover-foreground: 43 47% 94%;
+    --primary: 187 92% 69%;
+    --primary-foreground: 80 13% 3%;
+    --secondary: 72 12% 13%;
+    --secondary-foreground: 43 47% 94%;
+    --muted: 72 10% 15%;
+    --muted-foreground: 66 8% 58%;
+    --accent: 42 90% 65%;
+    --accent-foreground: 80 13% 3%;
+    --destructive: 350 94% 72%;
+    --destructive-foreground: 43 47% 94%;
+    --border: 72 10% 18%;
+    --input: 72 10% 18%;
+    --ring: 187 92% 69%;
+    --radius: 0.375rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--desk-bg);
+    color: var(--desk-text);
+  }
+
+  button,
+  input,
+  textarea {
+    letter-spacing: 0;
+  }
+}
+
+@layer utilities {
+  .terminal-shell {
+    background:
+      linear-gradient(90deg, rgba(246, 196, 83, 0.06) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(103, 232, 249, 0.045) 1px, transparent 1px),
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 4px),
+      var(--desk-bg);
+    background-size: 48px 48px, 48px 48px, 100% 4px, auto;
+  }
+
+  .panel-edge {
+    border: 1px solid rgba(120, 113, 108, 0.55);
+    background:
+      linear-gradient(180deg, rgba(23, 25, 16, 0.94), rgba(10, 11, 8, 0.96)),
+      var(--desk-panel);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.38);
+  }
+
+  .metric-tile {
+    border: 1px solid rgba(68, 64, 60, 0.9);
+    background:
+      linear-gradient(135deg, rgba(246, 196, 83, 0.06), transparent 38%),
+      rgba(7, 8, 6, 0.7);
+  }
+
+  .animate-slide-up {
+    animation: slide-up-fade 0.35s ease-out both;
+  }
+}
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080806;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3f3a2c;
+  border: 2px solid #080806;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b6147;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
