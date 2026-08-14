@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -34,5 +34,9 @@ async def get_portfolio():
 @app.post("/ask")
 async def ask_portfolio_question(request: AskRequest):
     """Answer natural language queries regarding portfolio stocks."""
-    response = await run_in_threadpool(answer_query, request.question)
+    question = request.question.strip()
+    if not question:
+        raise HTTPException(status_code=400, detail="Question must not be empty.")
+
+    response = await run_in_threadpool(answer_query, question)
     return {"response": response}

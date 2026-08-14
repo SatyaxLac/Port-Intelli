@@ -79,7 +79,8 @@ class AskGptTests(unittest.TestCase):
 
         response = answer_query("How is my portfolio doing?", portfolio=portfolio)
 
-        self.assertIn("Today", response)
+        self.assertIn("Today's top performers", response)
+        self.assertIn("INR +100.00", response)
         self.assertIn("GAINER", response)
         self.assertIn("LOSER", response)
 
