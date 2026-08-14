@@ -67,9 +67,14 @@ const AskGPTChat = () => {
 
       setMessages((prev) => [...prev, errorMessage]);
 
+      const isNetworkError = error instanceof TypeError;
       toast({
-        title: "Connection Error",
-        description: "Could not connect to the AI service. Please check if the API is running on port 8000.",
+        title: isNetworkError ? "Connection Error" : "Request Failed",
+        description: isNetworkError
+          ? "Could not connect to the AI service. Please check if the API is running on port 8000."
+          : error instanceof Error
+            ? error.message
+            : "An unexpected error occurred.",
         variant: "destructive",
       });
     } finally {

@@ -9,7 +9,14 @@ export const API_ENDPOINTS = {
 
 const parseJsonResponse = async <T>(response: Response): Promise<T> => {
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    let detail = "";
+    try {
+      const body = await response.json();
+      if (body.detail) detail = `: ${body.detail}`;
+    } catch {
+      // response body may not be JSON; ignore parse failure
+    }
+    throw new Error(`HTTP ${response.status}${detail}`);
   }
 
   return response.json() as Promise<T>;

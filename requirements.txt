@@ -6,7 +6,7 @@ beautifulsoup4
 fastapi
 uvicorn
 yfinance
-google-generativeai
+google-genai
 
 # NLP / LLMs
 langchain
@@ -20,3 +20,7 @@ streamlit
 
 # Optional enhancements
 tqdm
+
+# Dev / testing
+pytest
+httpx

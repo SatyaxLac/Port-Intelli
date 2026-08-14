@@ -2,7 +2,7 @@ import os
 import time
 from typing import Any, Dict, List, Optional
 
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,17 +11,16 @@ load_dotenv()
 _SUMMARY_CACHE: Dict[str, tuple[float, str]] = {}
 _CACHE_TTL_SECONDS = 600  # 10 minutes
 
-_model: Optional[genai.GenerativeModel] = None
+_client: Optional[genai.Client] = None
 
 
-def _get_model() -> Optional[genai.GenerativeModel]:
-    global _model
-    if _model is None:
+def _get_client() -> Optional[genai.Client]:
+    global _client
+    if _client is None:
         api_key = os.getenv("GEMINI_API_KEY")
         if api_key:
-            genai.configure(api_key=api_key)
-            _model = genai.GenerativeModel("models/gemini-1.5-flash")
-    return _model
+            _client = genai.Client(api_key=api_key)
+    return _client
 
 
 def summarize_news(symbol: str, articles: List[Dict[str, Any]]) -> str:
@@ -35,8 +34,8 @@ def summarize_news(symbol: str, articles: List[Dict[str, Any]]) -> str:
         if now - cached_time < _CACHE_TTL_SECONDS:
             return cached_summary
 
-    model_instance = _get_model()
-    if not model_instance:
+    client = _get_client()
+    if not client:
         # Fallback summary from headline if Gemini API key is unavailable
         first_title = articles[0].get("title", "")
         return f"Recent headline for {symbol}: '{first_title}'"
@@ -52,7 +51,7 @@ def summarize_news(symbol: str, articles: List[Dict[str, Any]]) -> str:
     )
 
     try:
-        response = model_instance.generate_content(prompt)
+        response = client.models.generate_content(model="gemini-1.5-flash", contents=prompt)
         summary = response.text.strip()
         _SUMMARY_CACHE[symbol] = (now, summary)
         return summary

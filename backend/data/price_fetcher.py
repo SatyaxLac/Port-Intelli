@@ -7,7 +7,7 @@ def fetch_yfinance_price(symbol: str) -> Optional[float]:
         ticker = yf.Ticker(f"{symbol}.NS")
         # Try fast_info first (significantly faster than ticker.info)
         if hasattr(ticker, "fast_info"):
-            price = ticker.fast_info.get("lastPrice") or ticker.fast_info.get("last_price")
+            price = ticker.fast_info.get("lastPrice") or getattr(ticker.fast_info, "last_price", None)
             if price is not None:
                 return float(price)
 

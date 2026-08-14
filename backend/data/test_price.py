@@ -46,6 +46,20 @@ class PriceFetcherTests(unittest.TestCase):
 
         self.assertIsNone(fetch_yfinance_price("FEDERALBNK"))
 
+    @patch("backend.data.price_fetcher.yf.Ticker")
+    def test_fetch_yfinance_price_falls_back_to_last_price_attr(self, ticker_mock):
+        # Simulates a FastInfo object where the dict-key "lastPrice" is absent
+        # (e.g. pre-market) but the attribute last_price still carries the value.
+        fast_info = Mock(spec=[])  # no .get() so we use a spec-less Mock with manual attrs
+        fast_info.get = Mock(return_value=None)  # dict-like .get("lastPrice") misses
+        fast_info.last_price = 88.5
+        ticker = Mock()
+        ticker.fast_info = fast_info
+        ticker_mock.return_value = ticker
+
+        self.assertEqual(fetch_yfinance_price("TATAMOTORS"), 88.5)
+        ticker.history.assert_not_called()
+
     @patch("backend.data.price_fetcher.yf.Ticker", side_effect=RuntimeError("network down"))
     def test_fetch_yfinance_price_returns_none_on_error(self, _ticker_mock):
         self.assertIsNone(fetch_yfinance_price("TATAMOTORS"))
