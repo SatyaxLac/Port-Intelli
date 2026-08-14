@@ -31,10 +31,20 @@ class PriceFetcherTests(unittest.TestCase):
         ticker = Mock()
         ticker.fast_info = {}
         ticker.history.return_value = pd.DataFrame()
-        ticker.info = {"regularMarketPrice": 77.7}
+        ticker.info = {"regularMarketPrice": "77.7"}
         ticker_mock.return_value = ticker
 
         self.assertEqual(fetch_yfinance_price("FEDERALBNK"), 77.7)
+
+    @patch("backend.data.price_fetcher.yf.Ticker")
+    def test_fetch_yfinance_price_returns_none_without_price(self, ticker_mock):
+        ticker = Mock()
+        ticker.fast_info = {}
+        ticker.history.return_value = pd.DataFrame()
+        ticker.info = {}
+        ticker_mock.return_value = ticker
+
+        self.assertIsNone(fetch_yfinance_price("FEDERALBNK"))
 
     @patch("backend.data.price_fetcher.yf.Ticker", side_effect=RuntimeError("network down"))
     def test_fetch_yfinance_price_returns_none_on_error(self, _ticker_mock):

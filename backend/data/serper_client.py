@@ -22,8 +22,13 @@ def search_news(
     raise_on_error: bool = False,
 ) -> List[Dict[str, Any]]:
     serper_key = api_key or os.getenv("SERPER_API_KEY")
+    if not serper_key:
+        if raise_on_error:
+            raise ValueError("SERPER_API_KEY is required to fetch news")
+        return []
+
     headers = {
-        "X-API-KEY": serper_key or "",
+        "X-API-KEY": serper_key,
         "Content-Type": "application/json",
     }
     data = {"q": query, "num": num_results}

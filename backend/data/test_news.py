@@ -45,6 +45,20 @@ class FetchNewsTests(unittest.TestCase):
 
 
 class SerperClientTests(unittest.TestCase):
+    @patch.dict("os.environ", {}, clear=True)
+    @patch("backend.data.serper_client.requests.post")
+    def test_search_news_returns_empty_without_api_key(self, post_mock):
+        self.assertEqual(search_news("TATAMOTORS stock news India"), [])
+        post_mock.assert_not_called()
+
+    @patch.dict("os.environ", {}, clear=True)
+    @patch("backend.data.serper_client.requests.post")
+    def test_search_news_raises_without_api_key_when_requested(self, post_mock):
+        with self.assertRaises(ValueError):
+            search_news("TATAMOTORS stock news India", raise_on_error=True)
+
+        post_mock.assert_not_called()
+
     @patch.dict("os.environ", {"SERPER_API_KEY": "test-key"}, clear=True)
     @patch("backend.data.serper_client.requests.post")
     def test_search_news_maps_serper_response_to_article_contract(self, post_mock):

@@ -17,8 +17,8 @@ def fetch_yfinance_price(symbol: str) -> Optional[float]:
             return float(df["Close"].iloc[-1])
 
         # Final fallback to info dict
-        return ticker.info.get("regularMarketPrice")
+        price = ticker.info.get("regularMarketPrice")
+        return float(price) if price is not None else None
     except Exception as e:
         print(f"[ERROR] Price fetch failed for {symbol}: {e}")
         return None
-
