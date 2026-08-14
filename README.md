@@ -50,9 +50,11 @@ Create a `.env` file in the project root:
 PORTFOLIO_HOLDINGS_JSON=[{"symbol":"TATAMOTORS","quantity":50,"avg_price":620.0}]
 GEMINI_API_KEY=your_gemini_api_key
 SERPER_API_KEY=your_serper_api_key
+CORS_ALLOW_ORIGINS=http://127.0.0.1:8080,http://localhost:8080
 ```
 
 If `PORTFOLIO_HOLDINGS_JSON` is not set, the backend falls back to sample holdings for development.
+If `CORS_ALLOW_ORIGINS` is not set, the API allows the local Vite dev and preview origins.
 
 ## Run Locally
 
@@ -119,5 +121,4 @@ cd frontend
 npm run lint
 npm run build
 ```
-
 

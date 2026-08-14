@@ -1,3 +1,5 @@
+import os
+
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.concurrency import run_in_threadpool
@@ -8,6 +10,23 @@ from backend.agents.askgpt import answer_query
 
 load_dotenv()
 
+DEFAULT_CORS_ORIGINS = [
+    "http://127.0.0.1:8080",
+    "http://localhost:8080",
+    "http://127.0.0.1:4173",
+    "http://localhost:4173",
+]
+
+
+def _get_cors_origins() -> list[str]:
+    configured_origins = os.getenv("CORS_ALLOW_ORIGINS")
+    if not configured_origins:
+        return DEFAULT_CORS_ORIGINS
+
+    origins = [origin.strip() for origin in configured_origins.split(",") if origin.strip()]
+    return origins or DEFAULT_CORS_ORIGINS
+
+
 app = FastAPI(
     title="Port-Intelli API",
     description="AI-powered portfolio intelligence API",
@@ -17,8 +36,8 @@ app = FastAPI(
 # Enable CORS for frontend clients
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_get_cors_origins(),
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
