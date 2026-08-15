@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: port-intelli-backend
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SERPER_API_KEY
+        sync: false
+      - key: PORTFOLIO_HOLDINGS_JSON
+        sync: false
+      - key: CORS_ALLOW_ORIGINS
+        fromService:
+          name: port-intelli-frontend
+          type: web
+          property: url
+
+  - type: web
+    name: port-intelli-frontend
+    env: static
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: "./frontend/dist"
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: port-intelli-backend
+          type: web
+          property: url
