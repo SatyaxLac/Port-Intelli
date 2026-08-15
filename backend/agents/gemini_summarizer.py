@@ -54,7 +54,7 @@ def summarize_news(symbol: str, articles: List[Dict[str, Any]]) -> str:
     )
 
     try:
-        response = client.models.generate_content(model="gemini-1.5-flash", contents=prompt)
+        response = client.models.generate_content(model="gemini-flash-latest", contents=prompt)
         summary = response.text.strip()
         _SUMMARY_CACHE[symbol] = (now, summary)
         return summary
