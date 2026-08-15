@@ -61,6 +61,8 @@ async def ask_portfolio_question(request: AskRequest):
     question = request.question.strip()
     if not question:
         raise HTTPException(status_code=400, detail="Question must not be empty.")
+    if len(question) > 500:
+        raise HTTPException(status_code=400, detail="Question is too long (max 500 characters).")
 
     response = await run_in_threadpool(answer_query, question)
     return {"response": response}
