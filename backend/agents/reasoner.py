@@ -24,8 +24,9 @@ def _process_stock(stock: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     current_value = current_price * qty
     gain = current_value - invested
 
-    news = fetch_news(symbol)
-    insight = summarize_news(symbol, news)
+    # Disabled auto-summarization on load to preserve API rate limits.
+    # News and AI insights are now fetched on-demand in the Ask GPT panel.
+    insight = None
 
     return {
         "symbol": symbol,

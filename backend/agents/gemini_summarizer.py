@@ -2,7 +2,7 @@ import os
 import time
 from typing import Any, Dict, List, Optional
 
-from openai import OpenAI
+from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,22 +11,23 @@ load_dotenv()
 _SUMMARY_CACHE: Dict[str, tuple[float, str]] = {}
 _CACHE_TTL_SECONDS = 600  # 10 minutes
 
-_client: Optional[OpenAI] = None
+_client: Optional[genai.Client] = None
 
-def _get_client() -> Optional[OpenAI]:
+
+def _get_client() -> Optional[genai.Client]:
     global _client
     if _client is None:
-        api_key = os.getenv("GROK_API_KEY")
+        api_key = os.getenv("GEMINI_API_KEY")
         if api_key:
-            _client = OpenAI(
+            _client = genai.Client(
                 api_key=api_key,
-                base_url="https://api.x.ai/v1"
+                http_options={"timeout": 10_000},
             )
     return _client
 
 
 def summarize_news(symbol: str, articles: List[Dict[str, Any]]) -> str:
-    """Summarize recent news for a stock symbol using Grok API with 10-minute caching."""
+    """Summarize recent news for a stock symbol using Gemini with 10-minute caching."""
     if not articles:
         return f"No recent news found for {symbol}."
 
@@ -38,7 +39,7 @@ def summarize_news(symbol: str, articles: List[Dict[str, Any]]) -> str:
 
     client = _get_client()
     if not client:
-        # Fallback summary from headline if API key is unavailable
+        # Fallback summary from headline if Gemini API key is unavailable
         first_title = articles[0].get("title", "")
         return f"Recent headline for {symbol}: '{first_title}'"
 
@@ -53,18 +54,11 @@ def summarize_news(symbol: str, articles: List[Dict[str, Any]]) -> str:
     )
 
     try:
-        response = client.chat.completions.create(
-            model="grok-beta",
-            messages=[
-                {"role": "system", "content": "You are a concise financial assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            timeout=10.0
-        )
-        summary = response.choices[0].message.content.strip()
+        response = client.models.generate_content(model="gemini-flash-latest", contents=prompt)
+        summary = response.text.strip()
         _SUMMARY_CACHE[symbol] = (now, summary)
         return summary
     except Exception as e:
-        print(f"[ERROR] Grok summarization failed for {symbol}: {e}")
+        print(f"[ERROR] Gemini summarization failed for {symbol}: {e}")
         first_title = articles[0].get("title", "")
         return f"Recent news updates suggest market movement based on: {first_title}"
