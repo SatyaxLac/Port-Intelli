@@ -8,19 +8,6 @@ uvicorn
 yfinance
 google-genai
 
-# NLP / LLMs
-langchain
-sentence-transformers
-chromadb
-transformers
-torch
-
-# UI (for later)
-streamlit
-
-# Optional enhancements
-tqdm
-
 # Dev / testing
 pytest
 httpx
