@@ -47,7 +47,7 @@ def analyze_portfolio_data() -> Dict[str, Any]:
     total_current = 0.0
 
     # Parallelize stock data enrichment using thread pool
-    max_workers = min(len(holdings), 5) if holdings else 1
+    max_workers = min(len(holdings), 15) if holdings else 1
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_stock = {executor.submit(_process_stock, h): h for h in holdings}
         for future in as_completed(future_to_stock):
