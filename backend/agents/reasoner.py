@@ -14,8 +14,11 @@ def _process_stock(stock: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     avg_price = stock["avg_price"]
 
     current_price = fetch_yfinance_price(symbol)
+    
+    # If live price fails (e.g. delisted or temporary API error), fallback to avg_price
+    # so the stock doesn't disappear from the user's dashboard entirely.
     if current_price is None:
-        return None
+        current_price = avg_price
 
     invested = avg_price * qty
     current_value = current_price * qty
