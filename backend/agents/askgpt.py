@@ -65,7 +65,7 @@ def answer_query(question: str, portfolio: Optional[Dict[str, Any]] = None) -> s
     # Stringify portfolio for context
     port_summary = []
     for s in portfolio.get("stocks", []):
-        port_summary.append(f"{s['symbol']}: {s['qty']} shares, Avg: {s['avg_price']:.2f}, Current: {s.get('current_price', 0):.2f}, Gain: {s.get('gain', 0):.2f}")
+        port_summary.append(f"{s['symbol']}: {s.get('quantity', s.get('qty', 0))} shares, Avg: {s.get('avg_price', 0):.2f}, Current: {(s.get('current_price') or 0):.2f}, Gain: {(s.get('gain') or 0):.2f}")
     
     port_text = "\n".join(port_summary)
     
