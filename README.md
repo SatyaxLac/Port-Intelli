@@ -122,3 +122,35 @@ npm run lint
 npm run build
 ```
 
+## Deployment
+
+Port-Intelli is designed to be easily deployed on free-tier hosting.
+
+### Backend (Render)
+
+1. Create a new Web Service pointing to your repository.
+2. Set the build command to `pip install -r requirements.txt`.
+3. Set the start command to `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`.
+4. Add the following Environment Variables:
+   - `GEMINI_API_KEY`: Your Gemini API Key
+   - `SERPER_API_KEY`: Your Serper.dev API Key
+   - `CORS_ALLOW_ORIGINS`: The URL of your deployed frontend (e.g., `https://your-frontend.vercel.app`)
+
+### Frontend (Vercel)
+
+1. Create a new project pointing to your repository.
+2. Change the Root Directory to `frontend`.
+3. The framework should be automatically detected as Vite.
+4. Add the following Environment Variable:
+   - `VITE_API_URL`: The URL of your deployed backend (e.g., `https://your-backend.onrender.com`)
+
+### Verification Checklist
+- Load the frontend URL and verify the dashboard loads without CORS errors.
+- Check that the `Live NSE` price enrichment is working for at least one stock.
+- Submit a query to the Ask GPT panel and verify a response is returned.
+
+## Known Limitations
+
+- **No caching on Ask GPT:** The `/ask` endpoint fetches fresh prices, news, and Gemini summaries for every request. This is an architectural choice to ensure the freshest data but can lead to slower responses and higher API usage.
+- **Unused Frontend Dependencies:** The frontend includes several `shadcn/ui` components in `package.json` that are currently unused (e.g., accordion, calendar).
+- **Basic Error Logging:** The backend uses standard `print()` statements instead of Python's `logging` module, which means error severity levels may not be fully utilized in deployment logs.
