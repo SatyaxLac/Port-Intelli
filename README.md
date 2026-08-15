@@ -1,5 +1,7 @@
 # Port-Intelli
 
+**Live Demo:** [https://port-intelli-frontend.onrender.com/](https://port-intelli-frontend.onrender.com/)
+
 Port-Intelli is a personal AI-powered portfolio intelligence dashboard for tracking holdings, live NSE prices, recent market news, and AI-generated stock context from one local app.
 
 The app combines a FastAPI backend with a React and Tailwind frontend. The backend loads holdings from local configuration or sample development data, enriches them with yfinance prices and Serper news, and uses Gemini to summarize what may be moving each stock. The frontend presents the portfolio in a trading-console style interface with an Ask GPT panel for natural-language questions about the portfolio.
