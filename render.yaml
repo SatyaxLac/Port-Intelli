@@ -12,10 +12,7 @@ services:
       - key: PORTFOLIO_HOLDINGS_JSON
         sync: false
       - key: CORS_ALLOW_ORIGINS
-        fromService:
-          name: port-intelli-frontend
-          type: web
-          property: url
+        sync: false
 
   - type: web
     name: port-intelli-frontend
@@ -24,7 +21,4 @@ services:
     staticPublishPath: "./frontend/dist"
     envVars:
       - key: VITE_API_URL
-        fromService:
-          name: port-intelli-backend
-          type: web
-          property: url
+        sync: false
