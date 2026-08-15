@@ -6,6 +6,8 @@ from backend.agents.reasoner import analyze_portfolio_data
 from backend.data.news_fetcher import fetch_news
 
 
+from backend.portfolio.holdings import get_holdings
+
 def answer_query(question: str, portfolio: Optional[Dict[str, Any]] = None) -> str:
     """Answer user natural language questions about portfolio stocks using Gemini and market summaries."""
     if portfolio is None:
@@ -17,8 +19,9 @@ def answer_query(question: str, portfolio: Optional[Dict[str, Any]] = None) -> s
 
     # Try matching a stock symbol in the question using exact word boundaries
     target_symbol = None
-    for stock in stocks:
-        symbol = stock["symbol"]
+    all_holdings = get_holdings()
+    for holding in all_holdings:
+        symbol = holding["symbol"]
         pattern = rf"\b{re.escape(symbol)}\b"
         if re.search(pattern, question, re.IGNORECASE):
             target_symbol = symbol
