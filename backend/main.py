@@ -45,6 +45,11 @@ app.add_middleware(
 class AskRequest(BaseModel):
     question: str
 
+@app.get("/health")
+async def health_check():
+    """Lightweight liveness check for deployment platforms."""
+    return {"status": "ok"}
+
 @app.get("/portfolio")
 async def get_portfolio():
     """Retrieve real-time portfolio analysis and AI insights."""
