@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 from google import genai
 from backend.agents.reasoner import analyze_portfolio_data
 from backend.data.news_fetcher import fetch_news
-from backend.data.price_fetcher import fetch_live_price
+from backend.data.price_fetcher import fetch_yfinance_price
 from backend.portfolio.holdings import get_holdings
 from dotenv import load_dotenv
 
@@ -55,7 +55,7 @@ def answer_query(question: str, portfolio: Optional[Dict[str, Any]] = None) -> s
     context = ""
     if target_symbol:
         try:
-            price = fetch_live_price(target_symbol)
+            price = fetch_yfinance_price(target_symbol)
             news = fetch_news(target_symbol)
             news_text = "\n".join([f"- {n.get('title')}" for n in news[:3]])
             context = f"Live Data for {target_symbol}:\nCurrent Price: {price} INR\nRecent News:\n{news_text}\n\n"
