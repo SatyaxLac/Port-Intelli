@@ -65,16 +65,24 @@ def answer_query(question: str, portfolio: Optional[Dict[str, Any]] = None) -> s
     # Stringify portfolio for context
     port_summary = []
     for s in portfolio.get("stocks", []):
-        port_summary.append(f"{s['symbol']}: {s.get('quantity', s.get('qty', 0))} shares, Avg: {s.get('avg_price', 0):.2f}, Current: {(s.get('current_price') or 0):.2f}, Gain: {(s.get('gain') or 0):.2f}")
+        sym = s.get("symbol", "?")
+        qty = s.get("quantity", 0)
+        avg = s.get("avg_price", 0) or 0
+        cur = s.get("current_price", 0) or 0
+        gain = s.get("gain", 0) or 0
+        port_summary.append(f"{sym}: {qty} shares, Avg: {avg:.2f}, Current: {cur:.2f}, Gain: {gain:.2f}")
     
     port_text = "\n".join(port_summary)
     
+    total_val = portfolio.get("total_current", 0) or 0
+    total_gain = portfolio.get("net_gain", 0) or 0
+
     prompt = f"""You are a helpful and knowledgeable AI financial portfolio assistant.
 The user is asking a question about their portfolio or the stock market.
 You must answer their question directly based on their portfolio data and any live market data provided.
 Do NOT just summarize the news unless asked to. Answer their exact query (e.g. if they ask for a price, give the price).
 
-User's Portfolio Overview (Total Value: {portfolio.get('total_value', 0):.2f}, Total Gain: {portfolio.get('total_gain', 0):.2f}):
+User's Portfolio Overview (Total Value: {total_val:.2f}, Total Gain: {total_gain:.2f}):
 {port_text}
 
 {context}
